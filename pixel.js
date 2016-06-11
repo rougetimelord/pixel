@@ -1,16 +1,19 @@
 var randoms = {
     get point() {
-        console.log('New point gotten')
+        //console.log('New point gotten')
         return {
             x: Math.floor(Math.random() * bounds.x + 1), 
             y: Math.floor(Math.random() * bounds.y + 1)
         };
     },
     get color() {
-        console.log('New color gotten')
+        //console.log('New color gotten')
         var tempInt = Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
         tempInt = (tempInt.length < 6) ? "0".repeat(6 - tempInt.length) + tempInt : tempInt;
         return '#' + tempInt;
+    }
+    get size(){
+        return Math.floor(Math.random() * 3 + 1).toString() + 'px';
     }
 }
 var bounds = {
@@ -36,11 +39,11 @@ var create = function(){
         pix.style.position = 'absolute';
         pix.style.left = coord.x + 'px';
         pix.style.top = coord.y + 'px';
-        pix.style.width = '3px';
-        pix.style.height = '3px';
+        pix.style.width = randoms.size;
+        pix.style.height = randoms.size;
         pix.style.backgroundColor = randoms.color;
         document.body.appendChild(pix);
-        console.log('Point generated at %O', coordId);
+        //console.log('Point generated at %O', coordId);
     }
     else
     {

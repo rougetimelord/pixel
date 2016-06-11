@@ -36,8 +36,8 @@ var create = function(){
         pix.style.position = 'absolute';
         pix.style.left = coord.x + 'px';
         pix.style.top = coord.y + 'px';
-        pix.style.width = '1px';
-        pix.style.height = '1px';
+        pix.style.width = '3px';
+        pix.style.height = '3px';
         pix.style.backgroundColor = randoms.color;
         document.body.appendChild(pix);
         console.log('Point generated at %O', coordId);

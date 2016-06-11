@@ -17,12 +17,12 @@ var bounds = {
     get x(){
         delete this.x;
         console.log('X gotten and cached.')
-        return this.x = window.innerWidth;
+        return this.x = window.innerWidth - 10;
     },
     get y(){
         delete this.y;
         console.log('Y gotten and cached.')
-        return this.y = window.innerHeight;
+        return this.y = window.innerHeight - 10;
     }
 }
 var create = function(){
@@ -40,12 +40,13 @@ var create = function(){
         pix.style.height = '1px';
         pix.style.backgroundColor = randoms.color;
         document.body.appendChild(pix);
+        console.log('Point generated at %O', coordId);
     }
     else
     {
         document.getElementById(coordId).style.backgroundColor = randoms.color;
+        console.log('Point overwritten at %O', coordId);
     }
-    console.log('Point generated at %O', coordId);
     return;
 }
 document.addEventListener('DOMContentLoaded', function () {

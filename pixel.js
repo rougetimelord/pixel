@@ -2,8 +2,8 @@ var randoms = {
     get point() {
         //console.log('New point gotten')
         return {
-            x: Math.floor(Math.random() * bounds.x + 1), 
-            y: Math.floor(Math.random() * bounds.y + 1)
+            x: Math.floor(Math.random() * bounds.x), 
+            y: Math.floor(Math.random() * bounds.y)
         };
     },
     get color() {
@@ -20,12 +20,12 @@ var bounds = {
     get x(){
         delete this.x;
         console.log('X gotten and cached.')
-        return this.x = window.innerWidth - 10;
+        return this.x = window.innerWidth;
     },
     get y(){
         delete this.y;
         console.log('Y gotten and cached.')
-        return this.y = window.innerHeight - 10;
+        return this.y = window.innerHeight;
     }
 }
 var create = function(){

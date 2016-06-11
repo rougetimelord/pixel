@@ -11,7 +11,7 @@ var randoms = {
         var tempInt = Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
         tempInt = (tempInt.length < 6) ? "0".repeat(6 - tempInt.length) + tempInt : tempInt;
         return '#' + tempInt;
-    }
+    },
     get size(){
         return Math.floor(Math.random() * 3 + 1).toString() + 'px';
     }

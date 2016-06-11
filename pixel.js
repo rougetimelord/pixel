@@ -13,7 +13,7 @@ var randoms = {
         return '#' + tempInt;
     },
     get size(){
-        return Math.floor(Math.random() * 3 + 1).toString() + 'px';
+        return Math.floor(Math.random() * 2 + 1).toString() + 'px';
     }
 }
 var bounds = {
@@ -39,8 +39,9 @@ var create = function(){
         pix.style.position = 'absolute';
         pix.style.left = coord.x + 'px';
         pix.style.top = coord.y + 'px';
-        pix.style.width = randoms.size;
-        pix.style.height = randoms.size;
+        var size = randoms.size;
+        pix.style.width = size;
+        pix.style.height = size;
         pix.style.backgroundColor = randoms.color;
         document.body.appendChild(pix);
         //console.log('Point generated at %O', coordId);

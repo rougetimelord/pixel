@@ -22,8 +22,19 @@ var randoms = {
         tempInt = (tempInt.length < 6) ? "0".repeat(6 - tempInt.length) + tempInt : tempInt;
         return '#' + tempInt;
     },
+    get letter() {
+        alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '!', '$', '#', '*', '(', ')', '#', '^','`','~',]
+        return ((Math.floor(Math.random() * 5) + 1) == 1) ? alphabet[Math.floor(Math.random() * (alphabet.length - 1))].toUpperCase() : alphabet[Math.floor(Math.random() * (alphabet.length - 1))];
+    },
     get size(){
         return Math.floor(Math.random() * 2 + 1).toString() + 'px';
+    },
+    get font() {
+        fonts = ['Georgia, serif', '"Palatino Linotype", "Book Antiqua", Palatino, serif', '"Times New Roman", Times, serif', 'Arial, Helvetica, sans-serif', '"Courier New", Courier, monospace', '"Lucida Console", Monaco, monospace'];
+        return fonts[Math.floor(Math.random() * (fonts.length - 1))];
+    },
+    get wait() {
+        return Math.floor(Math.random() * 10 + 1) * 1000;
     }
 }
 var bounds = {
@@ -38,7 +49,7 @@ var bounds = {
         return this.y = window.innerHeight;
     }
 }
-var create = function(){
+var createPixel = function(){
     var coord = randoms.point;
     var coordId = coord.x + ',' + coord.y;
     if(document.getElementById(coordId) === null)
@@ -59,11 +70,46 @@ var create = function(){
     else
     {
         document.getElementById(coordId).style.backgroundColor = randoms.color;
-        console.log('Point overwritten at %O', coordId);
+        //console.log('Point overwritten at %O', coordId);
     }
     return;
 }
+var Letter = function () {
+    this.point = randoms.point;
+    this.coordId = 'l,' + this.point.x + ',' + this.point.y;
+    if (document.getElementById(this.coordId) !== null)
+        throw "I don't wanna deal with overwriting right now";
+    this.letterVal = randoms.letter;
+    this.letP = document.createElement('p');
+    this.letP.id = this.coordId;
+    this.letP.className = 'letter';
+    this.letP.innerText = this.letterVal;
+    this.letP.style.position = 'absolute';
+    this.letP.style.left = this.point.x + 'px';
+    this.letP.style.top = this.point.y + 'px';
+    this.letP.style.color = randoms.color;
+    this.letP.style.fontFamily = randoms.font;
+    document.body.appendChild(this.letP);
+    this.update = function () {
+        this.letterVal = randoms.letter;
+        var p = document.getElementById(this.coordId);
+        p.innerHTML = this.letterVal;
+        p.style.color = randoms.color;
+        //console.log('Updated ', this.coordId, ' with value ', this.letterVal);
+    };
+    this.interval = setInterval(this.update.bind(this), 50);
+    this.delete = function () {
+        clearInterval(this.interval);
+        //console.log('Killed ', this.coordId, ' with value ', this.letterVal);
+        var p = document.getElementById(this.coordId);
+        setTimeout(function () { $(p).fadeOut(2000, 'linear', function () { p.parentNode.removeChild(p); delete this;}) }, randoms.wait);
+    };
+    setTimeout(this.delete.bind(this), randoms.wait * 2);
+};
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Pixel By Rouge //fuk ur performace//');
-    setInterval(function () { create() }, 25);
+    setInterval(function () { createPixel() }, 25);
+    setTimeout(null, 1000);
+    var letters = [];
+    setInterval(function () { letters.push(new Letter()); letters.filter(function (val) { if (val) return val }).join(", "); console.log(letters.length)}, 1000);
 });

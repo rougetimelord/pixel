@@ -111,5 +111,5 @@ document.addEventListener('DOMContentLoaded', function () {
     setInterval(function () { createPixel() }, 25);
     setTimeout(null, 1000);
     var letters = [];
-    setInterval(function () { letters.push(new Letter()); letters.filter(function (val) { if (val) return val }).join(", "); console.log(letters.length)}, 1000);
+    setInterval(function () { letters.push(new Letter());}, 1000);
 });

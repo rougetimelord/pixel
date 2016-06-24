@@ -11,6 +11,7 @@
 var randoms = {
     get point() {
         //console.log('New point gotten')
+        console.group('Bounds');
         return {
             x: Math.floor(Math.random() * bounds.x), 
             y: Math.floor(Math.random() * bounds.y)
@@ -46,6 +47,8 @@ var bounds = {
     get y(){
         delete this.y;
         console.log('Y gotten and cached.')
+        console.groupEnd('Bounds');
+        console.groupEnd('Init');
         return this.y = window.innerHeight;
     }
 }
@@ -107,6 +110,7 @@ var Letter = function () {
     setTimeout(this.delete.bind(this), randoms.wait * 2);
 };
 document.addEventListener('DOMContentLoaded', function () {
+    console.group('init');
     console.log('Pixel By Rouge //fuk ur performace//');
     setInterval(function () { createPixel() }, 25);
     setTimeout(null, 1000);

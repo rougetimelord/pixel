@@ -111,5 +111,9 @@ document.addEventListener('DOMContentLoaded', function () {
     setInterval(function () { createPixel() }, 25);
     setTimeout(null, 1000);
     var letters = [];
-    setInterval(function () { letters.push(new Letter());}, 1000);
+    setInterval(function () { letters.push(new Letter()); }, 1000);
+    document.addEventListener('beforeUnload', function () {
+        ga("create", "UA-50648028-3", "auto", "elements", { pixels: document.getElementsByClassName(pixel).length, letters: letters.length });
+        ga("elements.send")
+    });
 });

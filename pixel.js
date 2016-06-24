@@ -11,7 +11,6 @@
 var randoms = {
     get point() {
         //console.log('New point gotten')
-        console.group('Bounds');
         return {
             x: Math.floor(Math.random() * bounds.x), 
             y: Math.floor(Math.random() * bounds.y)
@@ -40,6 +39,7 @@ var randoms = {
 }
 var bounds = {
     get x(){
+        console.group('Bounds');
         delete this.x;
         console.log('X gotten and cached.')
         return this.x = window.innerWidth;

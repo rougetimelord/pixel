@@ -110,7 +110,7 @@ var Letter = function () {
     setTimeout(this.delete.bind(this), randoms.wait * 2);
 };
 document.addEventListener('DOMContentLoaded', function () {
-    console.group('init');
+    console.group('Init');
     console.log('Pixel By Rouge //fuk ur performace//');
     setInterval(function () { createPixel() }, 25);
     setTimeout(null, 1000);

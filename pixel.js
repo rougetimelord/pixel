@@ -114,8 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Pixel By Rouge //fuk ur performace//');
     setInterval(function () { createPixel() }, 25);
     setTimeout(null, 1000);
-    var letters = [];
-    setInterval(function () { letters.push(new Letter()); }, 1000);
+    setInterval(function () { (window.performance.memory.usedJSHeapSize + 6E6 == window.performance.memory.totalJSHeapSize) ? new Letter() : console.log('Heap is a bit full'); }, 1000);
     document.addEventListener('beforeUnload', function () {
         ga("create", "UA-50648028-3", "auto", "elements", { pixels: document.getElementsByClassName(pixel).length, letters: letters.length });
         ga("elements.send")

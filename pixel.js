@@ -82,11 +82,10 @@ var Letter = function () {
     this.coordId = 'l,' + this.point.x + ',' + this.point.y;
     if (document.getElementById(this.coordId) !== null)
         throw "I don't wanna deal with overwriting right now";
-    this.letterVal = randoms.letter;
     this.letP = document.createElement('p');
     this.letP.id = this.coordId;
     this.letP.className = 'letter';
-    this.letP.innerText = this.letterVal;
+    this.letP.innerText = randoms.letter;
     this.letP.style.position = 'absolute';
     this.letP.style.left = this.point.x + 'px';
     this.letP.style.top = this.point.y + 'px';
@@ -94,10 +93,8 @@ var Letter = function () {
     this.letP.style.fontFamily = randoms.font;
     document.body.appendChild(this.letP);
     this.update = function () {
-        this.letterVal = randoms.letter;
-        var p = document.getElementById(this.coordId);
-        p.innerHTML = this.letterVal;
-        p.style.color = randoms.color;
+        this.letP.innerHTML = randoms.letter;
+        this.letP.style.color = randoms.color;
         //console.log('Updated ', this.coordId, ' with value ', this.letterVal);
     };
     this.interval = setInterval(this.update.bind(this), 50);
@@ -105,7 +102,10 @@ var Letter = function () {
         clearInterval(this.interval);
         //console.log('Killed ', this.coordId, ' with value ', this.letterVal);
         var p = document.getElementById(this.coordId);
-        setTimeout(function () { $(p).fadeOut(2000, 'linear', function () { p.parentNode.removeChild(p); delete this;}) }, randoms.wait);
+        this.update = null;
+        this.letP = null;
+        this.point = null;
+        this.coordId = null;
     };
     setTimeout(this.delete.bind(this), randoms.wait * 2);
 };
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Pixel By Rouge //fuk ur performace//');
     setInterval(function () { createPixel() }, 25);
     setTimeout(null, 1000);
-    setInterval(function () { (window.performance.memory.usedJSHeapSize <= window.performance.memory.totalJSHeapSize - 6E6) ? new Letter() : console.log('Heap is a bit full'); }, 1000);
+    setInterval(function () { new Letter(); }, 1000);
     document.addEventListener('beforeUnload', function () {
         ga("create", "UA-50648028-3", "auto", "elements", { pixels: document.getElementsByClassName(pixel).length, letters: letters.length });
         ga("elements.send")

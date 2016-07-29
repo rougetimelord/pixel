@@ -119,16 +119,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var letterArr = new Array();
     setInterval(function (){ letterArr.push(new Letter()); }, 1000);
     var cleanArr = function(){
-        var killArr = new Array();
         for(var i = 0; i < letterArr.length; i++){
             if(letterArr[i].alive === false || typeof(letterArr[i]) === null){
-                letterArr[i] = null;
-                killArr.push(i);
+                letterArr.splice(i,1)
             }
-        }
-        for(var i = 0; i < killArr.length; i++)
-        {
-            letterArr.splice(killArr[i], 1);
         }
     } 
     setInterval(cleanArr, 2000);

@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var cleanArr = function(){
         var killArr = new Array();
         for(var i = 0; i < letterArr.length; i++){
-            if(letterArr[i].alive === false){
+            if(letterArr[i].alive === false || typeof(letterArr[i]) === null){
                 letterArr[i] = null;
                 killArr.push(i);
             }
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
             letterArr.splice(killArr[i], 1);
         }
     } 
-    setInterval(cleanArr, 2000)
+    setInterval(cleanArr, 2000);
     document.addEventListener('beforeUnload', function () {
         ga("create", "UA-50648028-3", "auto", "elements", { pixels: document.getElementsByClassName(pixel).length, letters: letters.length });
         ga("elements.send")

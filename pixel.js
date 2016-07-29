@@ -23,7 +23,7 @@ var randoms = {
         return '#' + tempInt;
     },
     get letter() {
-        alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '!', '$', '#', '*', '(', ')', '#', '^','`','~',]
+        alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '!', '$', '#', '*', '(', ')', '#', '^','`','~'];
         return ((Math.floor(Math.random() * 5) + 1) == 1) ? alphabet[Math.floor(Math.random() * (alphabet.length - 1))].toUpperCase() : alphabet[Math.floor(Math.random() * (alphabet.length - 1))];
     },
     get size(){
@@ -78,6 +78,8 @@ var createPixel = function(){
     return;
 }
 var Letter = function () {
+    var  _ = this;
+    this.alive = true;
     this.point = randoms.point;
     this.coordId = 'l,' + this.point.x + ',' + this.point.y;
     if (document.getElementById(this.coordId) !== null)
@@ -101,11 +103,11 @@ var Letter = function () {
     this.delete = function () {
         clearInterval(this.interval);
         //console.log('Killed ', this.coordId, ' with value ', this.letterVal);
-        var p = document.getElementById(this.coordId);
         this.update = null;
         this.letP = null;
         this.point = null;
         this.coordId = null;
+        _.alive = false;
     };
     setTimeout(this.delete.bind(this), randoms.wait * 2);
 };
@@ -114,7 +116,22 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Pixel By Rouge //fuk ur performace//');
     setInterval(function () { createPixel() }, 25);
     setTimeout(null, 1000);
-    setInterval(function () { new Letter(); }, 1000);
+    var letterArr = new Array();
+    setInterval(function () { letterArr.push(new Letter();) }, 1000);
+    var cleanArr = function(){
+        var killArr = new Array();
+        for(var i = 0; i < letterArr.length; i++){
+            if(letterArr[i].alive === false){
+                letterArr[i] = null;
+                killArr.push(i);
+            }
+        }
+        for(var i = 0; i < killArr.length; i++)
+        {
+            letterArr.splice(killArr[i], 1);
+        }
+    } 
+    setInterval(cleanArr, 2000)
     document.addEventListener('beforeUnload', function () {
         ga("create", "UA-50648028-3", "auto", "elements", { pixels: document.getElementsByClassName(pixel).length, letters: letters.length });
         ga("elements.send")

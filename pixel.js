@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setInterval(function () { createPixel() }, 25);
     setTimeout(null, 1000);
     var letterArr = new Array();
-    setInterval(function () { letterArr.push(new Letter();) }, 1000);
+    setInterval(function (){ letterArr.push(new Letter()); }, 1000);
     var cleanArr = function(){
         var killArr = new Array();
         for(var i = 0; i < letterArr.length; i++){

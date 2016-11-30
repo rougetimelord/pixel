@@ -8,6 +8,21 @@
       _\/\\\_____________\/\\\__/\\\/\///\\\__\//\\\\\\\\\\__/\\\\\\\\\_
       _\///______________\///__\///____\///____\//////////__\/////////__.js
       by rouge*/
+var bounds = {
+    get x() {
+        console.group('Bounds');
+        delete this.x;
+        console.log('X gotten and cached.')
+        return this.x = window.innerWidth;
+    },
+    get y() {
+        delete this.y;
+        console.log('Y gotten and cached.')
+        console.groupEnd('Bounds');
+        console.groupEnd('Init');
+        return this.y = window.innerHeight;
+    }
+}
 var randoms = {
     get point() {
         //console.log('New point gotten')
@@ -37,38 +52,30 @@ var randoms = {
         return Math.floor(Math.random() * 10 + 1) * 1000;
     }
 }
-var bounds = {
-    get x(){
-        console.group('Bounds');
-        delete this.x;
-        console.log('X gotten and cached.')
-        return this.x = window.innerWidth;
-    },
-    get y(){
-        delete this.y;
-        console.log('Y gotten and cached.')
-        console.groupEnd('Bounds');
-        console.groupEnd('Init');
-        return this.y = window.innerHeight;
-    }
+var mkEl = function (t, i, c, p, co, s, tx, f, h, a, pa) {
+    //console.log('mkEl called with ', t, ', ', c);
+    t = t || 'p', p = p || null, co = co || "#000", f = f || 'Arial, Helvetica, sans-serif', pa = pa || document.body;
+    if (!i || !c) { throw "id or class not supplied" };
+    var e = document.createElement(t);
+    e.id = i, e.className = c;
+    if (p) { e.style.position = 'absolute', e.style.left = p.x + 'px', e.style.top = p.y + 'px'; }
+    if (t == 'p') { e.style.color = co; }
+    if (t == 'div') { e.style.backgroundColor = co; }
+    if (s) { e.style.width = s, e.style.height = s; }
+    if (tx) { e.innerText = tx; }
+    if (f && tx) { e.style.fontFamily = f; }
+    if (h) { e.update = h, e.update(); }
+    if (a) { a.push(e);}
+    pa.appendChild(e);
 }
 var createPixel = function(){
     var coord = randoms.point;
     var coordId = coord.x + ',' + coord.y;
+    //console.groupCollapsed('Pixel');
     if(document.getElementById(coordId) === null)
     {
-        var pix = document.createElement('div');
-        pix.id = coordId;
-        pix.className = 'pixel';
-        pix.style.position = 'absolute';
-        pix.style.left = coord.x + 'px';
-        pix.style.top = coord.y + 'px';
-        var size = randoms.size;
-        pix.style.width = size;
-        pix.style.height = size;
-        pix.style.backgroundColor = randoms.color;
-        document.body.appendChild(pix);
-        //console.log('Point generated at %O', coordId);
+        mkEl('div',coordId,'pixel',coord,randoms.color,randoms.size)
+        //console.groupEnd('Pixel')
     }
     else
     {
@@ -77,57 +84,47 @@ var createPixel = function(){
     }
     return;
 }
-var Letter = function () {
-    var  _ = this;
-    this.alive = true;
-    this.point = randoms.point;
-    this.coordId = 'l,' + this.point.x + ',' + this.point.y;
+var mkLetter = function () {
+    var point = randoms.point, coordId = 'l,' + point.x + ',' + point.y;
     if (document.getElementById(this.coordId) !== null)
         throw "I don't wanna deal with overwriting right now";
-    this.letP = document.createElement('p');
-    this.letP.id = this.coordId;
-    this.letP.className = 'letter';
-    this.letP.innerText = randoms.letter;
-    this.letP.style.position = 'absolute';
-    this.letP.style.left = this.point.x + 'px';
-    this.letP.style.top = this.point.y + 'px';
-    this.letP.style.color = randoms.color;
-    this.letP.style.fontFamily = randoms.font;
-    document.body.appendChild(this.letP);
+    mkEl('p', coordId, 'letter', point, randoms.color, '', randoms.letter, randoms.font, letUpdater, letterArr);
+}
+var letUpdater = function () {
+    this.alive = true;
     this.update = function () {
-        this.letP.innerHTML = randoms.letter;
-        this.letP.style.color = randoms.color;
+        this.innerHTML = randoms.letter;
+        this.style.color = randoms.color;
         //console.log('Updated ', this.coordId, ' with value ', this.letterVal);
     };
     this.interval = setInterval(this.update.bind(this), 50);
     this.delete = function () {
         clearInterval(this.interval);
         //console.log('Killed ', this.coordId, ' with value ', this.letterVal);
-        this.update = null;
-        this.letP = null;
-        this.point = null;
-        this.coordId = null;
-        _.alive = false;
+        delete this.update;
+        delete this.alive;
+        delete this;
     };
     setTimeout(this.delete.bind(this), randoms.wait * 2);
-};
+}
+var letterArr = new Array();
 document.addEventListener('DOMContentLoaded', function () {
-    console.group('Init');
-    console.log('Pixel By Rouge //fuk ur performace//');
     setInterval(function () { createPixel() }, 25);
     setTimeout(null, 1000);
-    var letterArr = new Array();
-    setInterval(function (){ letterArr.push(new Letter()); }, 1000);
+    setInterval(mkLetter, 1000);
+    lc = 0;
     var cleanArr = function(){
         for(var i = 0; i < letterArr.length; i++){
-            if(letterArr[i].alive === false || typeof(letterArr[i]) === null){
-                letterArr.splice(i,1)
+            if (!letterArr[i].alive) {
+                letterArr[i].remove();
+                lc++;
+                letterArr.splice(i, 1);
             }
         }
     } 
-    setInterval(cleanArr, 2000);
+    setInterval(cleanArr, randoms.wait);
     document.addEventListener('beforeUnload', function () {
-        ga("create", "UA-50648028-3", "auto", "elements", { pixels: document.getElementsByClassName(pixel).length, letters: letters.length });
+        ga("create", "UA-50648028-3", "auto", "elements", { pixels: document.getElementsByClassName(pixel).length, letters: letters.length + lc });
         ga("elements.send")
     });
 });

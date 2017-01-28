@@ -107,11 +107,9 @@ var letUpdater = function () {
     };
     setTimeout(this.delete.bind(this), randoms.wait * 2);
 }
-var letterArr = new Array();
 document.addEventListener('DOMContentLoaded', function () {
     setInterval(function () { createPixel() }, 25);
-    setTimeout(null, 1000);
-    setInterval(mkLetter, 1000);
+    //setInterval(mkLetter, 1000);
     lc = 0;
     var cleanArr = function(){
         for(var i = 0; i < letterArr.length; i++){
@@ -122,9 +120,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     } 
-    setInterval(cleanArr, randoms.wait);
+    //setInterval(cleanArr, randoms.wait);
     document.addEventListener('beforeUnload', function () {
-        ga("create", "UA-50648028-3", "auto", "elements", { pixels: document.getElementsByClassName(pixel).length, letters: letters.length + lc });
+        ga("create", "UA-50648028-3", "auto", "elements", { pixels: document.getElementsByClassName(pixel).length/*, letters: letters.length + lc*/ });
         ga("elements.send")
     });
 });

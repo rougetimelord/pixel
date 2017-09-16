@@ -25,12 +25,32 @@
     <meta name="twitter:title" content="Pixel">
     <meta name="twitter:description" content="An edgy art piece">
     <style>
-        #disc{z-index:0;text-align:center;margin-top:25%;}
-        .pixel{z-index:1;margin:0px;}
-        .letter {z-index: -1;margin: 0px;}
-        body{margin:0px;overflow-x:hidden;overflow-y:hidden;}
+        #disc {
+            z-index: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%)translateY(-50%);
+        }
+
+        .pixel {
+            z-index: 1;
+            margin: 0px;
+        }
+
+        .letter {
+            z-index: -1;
+            margin: 0px;
+        }
+
+        body {
+            margin: 0px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
     </style>
 </head>
 <body>
+    <canvas id="canv" class="pixel"></canvas>
     <p id="disc">I'm going to decay alone</p>
 </body>

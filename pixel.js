@@ -8,6 +8,7 @@
       _\/\\\_____________\/\\\__/\\\/\///\\\__\//\\\\\\\\\\__/\\\\\\\\\_
       _\///______________\///__\///____\///____\//////////__\/////////__.js
       by rouge*/
+var c, ctx;
 var bounds = {
     get x() {
         console.group('Bounds');
@@ -42,87 +43,32 @@ var randoms = {
         return ((Math.floor(Math.random() * 5) + 1) == 1) ? alphabet[Math.floor(Math.random() * (alphabet.length - 1))].toUpperCase() : alphabet[Math.floor(Math.random() * (alphabet.length - 1))];
     },
     get size(){
-        return Math.floor(Math.random() * 2 + 1).toString() + 'px';
+        return Math.floor(Math.random() * 2 + 1);
     },
     get font() {
         fonts = ['Georgia, serif', '"Palatino Linotype", "Book Antiqua", Palatino, serif', '"Times New Roman", Times, serif', 'Arial, Helvetica, sans-serif', '"Courier New", Courier, monospace', '"Lucida Console", Monaco, monospace'];
         return fonts[Math.floor(Math.random() * (fonts.length - 1))];
-    },
-    get wait() {
-        return Math.floor(Math.random() * 10 + 1) * 1000;
     }
-}
-var mkEl = function (t, i, c, p, co, s, tx, f, h, a, pa) {
-    //console.log('mkEl called with ', t, ', ', c);
-    t = t || 'p', p = p || null, co = co || "#000", f = f || 'Arial, Helvetica, sans-serif', pa = pa || document.body;
-    if (!i || !c) { throw "id or class not supplied" };
-    var e = document.createElement(t);
-    e.id = i, e.className = c;
-    if (p) { e.style.position = 'absolute', e.style.left = p.x + 'px', e.style.top = p.y + 'px'; }
-    if (t == 'p') { e.style.color = co; }
-    if (t == 'div') { e.style.backgroundColor = co; }
-    if (s) { e.style.width = s, e.style.height = s; }
-    if (tx) { e.innerText = tx; }
-    if (f && tx) { e.style.fontFamily = f; }
-    if (h) { e.update = h, e.update(); }
-    if (a) { a.push(e);}
-    pa.appendChild(e);
 }
 var createPixel = function(){
     var coord = randoms.point;
-    var coordId = coord.x + ',' + coord.y;
-    //console.groupCollapsed('Pixel');
-    if(document.getElementById(coordId) === null)
-    {
-        mkEl('div',coordId,'pixel',coord,randoms.color,randoms.size)
-        //console.groupEnd('Pixel')
-    }
-    else
-    {
-        document.getElementById(coordId).style.backgroundColor = randoms.color;
-        //console.log('Point overwritten at %O', coordId);
-    }
-    return;
+    var s = randoms.size;
+    ctx.fillStyle = randoms.color;
+    ctx.fillRect(coord.x, coord.y, s, s);
 }
 var mkLetter = function () {
-    var point = randoms.point, coordId = 'l,' + point.x + ',' + point.y;
-    if (document.getElementById(this.coordId) !== null)
-        throw "I don't wanna deal with overwriting right now";
-    mkEl('p', coordId, 'letter', point, randoms.color, '', randoms.letter, randoms.font, letUpdater, letterArr);
-}
-var letUpdater = function () {
-    this.alive = true;
-    this.update = function () {
-        this.innerHTML = randoms.letter;
-        this.style.color = randoms.color;
-        //console.log('Updated ', this.coordId, ' with value ', this.letterVal);
-    };
-    this.interval = setInterval(this.update.bind(this), 50);
-    this.delete = function () {
-        clearInterval(this.interval);
-        //console.log('Killed ', this.coordId, ' with value ', this.letterVal);
-        delete this.update;
-        delete this.alive;
-        delete this;
-    };
-    setTimeout(this.delete.bind(this), randoms.wait * 2);
+    var p = randoms.point;
+    var font = Math.floor(randoms.size * 7.5) + 'px ' + randoms.font;
+    var color = randoms.color;
+    ctx.font = font;
+    ctx.fillStyle = color;
+    ctx.fillText(randoms.letter, p.x, p.y);
 }
 document.addEventListener('DOMContentLoaded', function () {
+    c = document.getElementById('canv');
+    ctx = c.getContext('2d');
+    c.width = bounds.x;
+    c.height = bounds.y;
     setInterval(function () { createPixel() }, 25);
-    //setInterval(mkLetter, 1000);
-    lc = 0;
-    var cleanArr = function(){
-        for(var i = 0; i < letterArr.length; i++){
-            if (!letterArr[i].alive) {
-                letterArr[i].remove();
-                lc++;
-                letterArr.splice(i, 1);
-            }
-        }
-    } 
-    //setInterval(cleanArr, randoms.wait);
-    document.addEventListener('beforeUnload', function () {
-        ga("create", "UA-50648028-3", "auto", "elements", { pixels: document.getElementsByClassName(pixel).length/*, letters: letters.length + lc*/ });
-        ga("elements.send")
-    });
+    setInterval(mkLetter, 1000);
 });
